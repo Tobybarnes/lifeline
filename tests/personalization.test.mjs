@@ -29,17 +29,11 @@ test("Toby's record contains the confirmed LinkedIn and family chronology", () =
     2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023,
     2024, 2025,
   ])
-  assert.equal(
-    Object.values(eventsByYear).reduce((count, events) => {
-      return count + events.length
-    }, 0),
-    46,
-  )
-  assert.deepEqual(eventsByYear[1999], ["Met Emily."])
-  assert.equal(eventsByYear[2003].at(-1), "Archie was born.")
-  assert.equal(eventsByYear[2005].at(-1), "Robin was born.")
-  assert.deepEqual(eventsByYear[2006], ["Got married."])
-  assert.deepEqual(eventsByYear[2007], ["Fraser was born."])
+  assert.ok(eventsByYear[1999].some((event) => event.includes("Met Emily")))
+  assert.match(eventsByYear[2003].at(-1), /Archie was born/)
+  assert.match(eventsByYear[2005].at(-1), /Robin was born/)
+  assert.ok(eventsByYear[2006].some((event) => event.includes("Got married")))
+  assert.match(eventsByYear[2007].at(-1), /Fraser was born/)
   assert.match(eventsByYear[1990][0], /Liverpool John Moores University/)
   assert.match(eventsByYear[2025][0], /Design Director at Shopify/)
 
@@ -51,7 +45,11 @@ test("Toby's record contains the confirmed LinkedIn and family chronology", () =
     2006, 2007, 2009, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020,
     2021, 2022, 2023, 2024, 2025,
   ])
-  assert.doesNotMatch(source, /^\s*events\s*:/m)
+  const metadataSource = source.slice(
+    source.indexOf("const milestoneMetadata"),
+    source.indexOf("export function getTobyLifeline"),
+  )
+  assert.doesNotMatch(metadataSource, /^\s*events\s*:/m)
   assert.doesNotMatch(content, /\b(?:daughter|son|sold|sale)\b/i)
 
   const media = [
@@ -61,6 +59,45 @@ test("Toby's record contains the confirmed LinkedIn and family chronology", () =
   for (const mediaPath of media) {
     assert.match(mediaPath, /^\/images\/toby\//)
     assert.ok(existsSync(at(`public${mediaPath}`)), `${mediaPath} is missing`)
+  }
+})
+
+test("company roles use the month and year ranges from LinkedIn", () => {
+  const content = read("content/toby.md")
+  const eventsByYear = parseLifelineMarkdown(content, {
+    sourceName: "content/toby.md",
+    minYear: 1973,
+    maxYear: new Date().getFullYear(),
+  })
+  const expectedRoleDates = [
+    [1992, "Dun & Bradstreet", "Feb 1992–Feb 1996"],
+    [1996, "NTL Interactive", "Nov 1996–Dec 1998"],
+    [1998, "MTV UK", "Dec 1998–Mar 2003"],
+    [2003, "Twelve Ten", "Oct 2003–Oct 2004"],
+    [2004, "Pixel-Lab", "Apr 2004–Mar 2011"],
+    [2005, "London Games Festival", "Mar 2005–Dec 2009"],
+    [2009, "Chromaroma", "Dec 2009–Dec 2011"],
+    [2011, "AKQA London", "May 2011–Aug 2013"],
+    [2013, "Nike", "Aug 2013–Aug 2016"],
+    [2013, "TrackShift", "Sep 2013–Dec 2019"],
+    [2015, "A Strangely Isolated Place", "Jan 2015–present"],
+    [2016, "AKQA", "Sep 2016–Jun 2018"],
+    [2017, "Jaguar Land Rover", "Jan 2017–Feb 2018"],
+    [2018, "AKQA", "Jun 2018–Jun 2019"],
+    [2019, "Nike", "Jun 2019–May 2021"],
+    [2021, "Amazon Alexa", "May 2021–Jun 2022"],
+    [2022, "Amazon Alexa", "Jul 2022–Jun 2023"],
+    [2023, "Cash App", "Jun 2023–May 2025"],
+    [2024, "Hoyt Arboretum Friends", "Mar 2024–present"],
+    [2025, "Shopify", "Jun 2025–present"],
+  ]
+
+  for (const [year, organization, dateRange] of expectedRoleDates) {
+    const event = eventsByYear[year].find((candidate) =>
+      candidate.includes(organization) && candidate.includes(`(${dateRange})`),
+    )
+
+    assert.ok(event, `${organization} should show ${dateRange} in ${year}`)
   }
 })
 

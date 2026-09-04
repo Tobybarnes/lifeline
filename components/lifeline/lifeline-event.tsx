@@ -43,29 +43,45 @@ export function LifelineEventText({
   className?: string
 }) {
   const content = getEventContent(event)
-
-  if (typeof content === "string") {
-    return <span className={className}>{content}</span>
-  }
+  const dateRange =
+    typeof event === "object" &&
+    !Array.isArray(event) &&
+    "dateRange" in event
+      ? event.dateRange
+      : undefined
 
   return (
-    <span className={className}>
-      {content.map((segment, index) =>
-        segment.type === "link" ? (
-          <a
-            key={index}
-            href={segment.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline decoration-zinc-400 underline-offset-2 transition-colors duration-300 group-hover:text-black group-hover:decoration-zinc-600 dark:decoration-zinc-700 dark:group-hover:text-white dark:group-hover:decoration-zinc-400"
-          >
-            {segment.value}
-          </a>
-        ) : (
-          <span key={index}>{segment.value}</span>
-        ),
+    <>
+      {typeof content === "string" ? (
+        <span className={className}>{content}</span>
+      ) : (
+        <span className={className}>
+          {content.map((segment, index) =>
+            segment.type === "link" ? (
+              <a
+                key={index}
+                href={segment.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-zinc-400 underline-offset-2 transition-colors duration-300 group-hover:text-black group-hover:decoration-zinc-600 dark:decoration-zinc-700 dark:group-hover:text-white dark:group-hover:decoration-zinc-400"
+              >
+                {segment.value}
+              </a>
+            ) : (
+              <span key={index}>{segment.value}</span>
+            ),
+          )}
+        </span>
       )}
-    </span>
+      {dateRange && (
+        <span
+          className="block whitespace-nowrap text-balance tabular-nums"
+          data-lifeline-date-range=""
+        >
+          ({dateRange})
+        </span>
+      )}
+    </>
   )
 }
 

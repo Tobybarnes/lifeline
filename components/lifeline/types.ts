@@ -58,6 +58,8 @@ export type LifelineEventEffect = "fireworks" | "fireworks-argentina"
  */
 export interface LifelineEventObject {
   text: string | LifelineEventSegment[]
+  /** Optional date range rendered as a secondary line beneath the event text. */
+  dateRange?: string
   image?: LifelineEventImage
   effect?: LifelineEventEffect
 }

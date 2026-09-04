@@ -4,6 +4,7 @@ import {
   defineLifeline,
   type LifelineMilestone,
 } from "@/lib/lifeline-data"
+import { separateLifelineEventDateRange } from "@/lib/lifeline-event-date.mts"
 import {
   mergeLifelineMarkdownEvents,
   parseLifelineMarkdown,
@@ -157,9 +158,16 @@ export function getTobyLifeline() {
       maxYear: CURRENT_YEAR,
     },
   )
-  const milestones = mergeLifelineMarkdownEvents(
-    milestoneMetadata,
-    eventsByYear,
+  const milestones: Record<number, LifelineMilestone> = Object.fromEntries(
+    Object.entries(
+      mergeLifelineMarkdownEvents(milestoneMetadata, eventsByYear),
+    ).map(([year, milestone]) => [
+      Number(year),
+      {
+        ...milestone,
+        events: milestone.events.map(separateLifelineEventDateRange),
+      },
+    ]),
   )
 
   return defineLifeline({
