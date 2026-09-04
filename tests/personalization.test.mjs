@@ -94,7 +94,7 @@ test("the home page and metadata belong to Toby", () => {
   assert.match(layout, /A year-by-year record of Toby Barnes's work and life\./)
 })
 
-test("upstream demo surfaces and personal media are absent", () => {
+test("the upstream demo and registry files remain available", () => {
   for (const file of [
     "app/embed/page.tsx",
     "app/lifeline/page.tsx",
@@ -114,7 +114,7 @@ test("upstream demo surfaces and personal media are absent", () => {
     "app/icon.png",
     "app/apple-icon.png",
   ]) {
-    assert.equal(existsSync(at(file)), false, `${file} should be removed`)
+    assert.equal(existsSync(at(file)), true, `${file} should be preserved`)
   }
 })
 
