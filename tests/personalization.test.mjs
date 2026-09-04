@@ -8,7 +8,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const at = (file) => path.join(root, file)
 const read = (file) => readFileSync(at(file), "utf8")
 
-test("Toby's record contains only the confirmed first-pass chronology", () => {
+test("Toby's record contains the confirmed LinkedIn and family chronology", () => {
   const source = read("lib/toby.ts")
 
   assert.match(source, /name:\s*["']Toby Barnes["']/)
@@ -21,29 +21,144 @@ test("Toby's record contains only the confirmed first-pass chronology", () => {
     [
       1990,
       [
-        "Liverpool John Moores University (1990–1994): Bachelor of Arts - BA, Business Information & Management (Business Administration and Marketing).",
+        "Started a BA in Business Information & Management at Liverpool John Moores University (1990–1994).",
+        "Studied business, economics, systems thinking, databases and marketing.",
         "Chairman of the Role Playing Society for 4 years. :)",
       ],
     ],
-    [1992, ["Dun & Bradstreet (1992–1996)."]],
-    [1996, ["NTL Interactive (1996–1998)."]],
-    [1998, ["MTV (1998–2003)."]],
+    [
+      1992,
+      [
+        "Digital Strategy Executive at Dun & Bradstreet (1992–1996).",
+        "Worked on board-level digital projects.",
+      ],
+    ],
+    [
+      1996,
+      [
+        "Head of Content Innovation at NTL Interactive (1996–1998).",
+        "Helped launch Europe’s first commercial interactive TV service and led a team of 30 creatives and technologists.",
+      ],
+    ],
+    [
+      1998,
+      [
+        "Head of Interactive at MTV UK, Northern & Eastern Europe (1998–2003).",
+        "Led mobile, web and BAFTA-winning 360° projects.",
+      ],
+    ],
     [1999, ["Met Emily."]],
-    [2003, ["Twelve Ten (2003–2004).", "Archie was born."]],
-    [2004, ["Mudlark Digital / Pixel-Lab (2004–2011)."]],
-    [2005, ["London Games Festival (2005–2009).", "Robin was born."]],
+    [
+      2003,
+      [
+        "Creative Director at Twelve Ten (2003–2004).",
+        "Led new business and strategy.",
+        "Archie was born.",
+      ],
+    ],
+    [
+      2004,
+      [
+        "Founder and CEO of Mudlark Digital / Pixel-Lab (2004–2011).",
+        "Led projects including Such Tweet Sorrow and Chromaroma.",
+      ],
+    ],
+    [
+      2005,
+      [
+        "Co-founded and directed the original London Games Festival (2005–2009).",
+        "Produced games, art, performance and skills events.",
+        "Robin was born.",
+      ],
+    ],
     [2006, ["Got married."]],
     [2007, ["Fraser was born."]],
-    [2009, ["Chromaroma (2009–2011)."]],
-    [2011, ["AKQA, London and later Portland (2011–2019)."]],
-    [2013, ["TrackShift advisor (2013–2019)."]],
-    [2015, ["A Strangely Isolated Place (2015–present)."]],
-    [2017, ["Jaguar Land Rover mentor (2017–2018)."]],
-    [2019, ["Nike (2019–2021)."]],
-    [2021, ["Amazon Alexa (2021–2023)."]],
-    [2023, ["Cash App (2023–2025)."]],
-    [2024, ["Hoyt Arboretum Friends board (2024–present)."]],
-    [2025, ["Shopify (2025–present)."]],
+    [
+      2009,
+      [
+        "Founder and CEO of Chromaroma (2009–2011).",
+        "The Oyster-card social game raised two funding rounds and is now a permanent exhibit at MoMA.",
+      ],
+    ],
+    [
+      2011,
+      [
+        "Product Strategy Director at AKQA London (2011–2016).",
+        "Led AKQA’s global Product and Business Innovation practice.",
+      ],
+    ],
+    [
+      2013,
+      [
+        "Moved from London to Portland as AKQA Product Strategy Director for Nike.",
+        "Strategic Advisor to TrackShift (2013–2019), helping musicians get paid faster.",
+      ],
+    ],
+    [
+      2015,
+      [
+        "“Swiss Army Knife” at A Strangely Isolated Place (2015–present).",
+        "Worked across operations, logistics, licensing and sales.",
+      ],
+    ],
+    [
+      2016,
+      [
+        "Group Director for Nike at AKQA (2016–2018).",
+        "Led AKQA Portland’s customer-experience work, including Nike Membership and the Nike App pilot.",
+      ],
+    ],
+    [
+      2017,
+      [
+        "Mentor and Advisor to Jaguar Land Rover (2017–2018).",
+        "Worked with the first three incubator cohorts.",
+      ],
+    ],
+    [
+      2018,
+      [
+        "Executive Director at AKQA (2018–2019).",
+        "Led AKQA’s Consumer Experience team on work for Nike, Levi’s, Amazon and Beats.",
+      ],
+    ],
+    [
+      2019,
+      [
+        "Senior Director, Consumer Experience at Nike (2019–2021).",
+        "Led digital and physical services, experiences and store concepts.",
+      ],
+    ],
+    [2020, ["Led the Nike Rise retail concept and global launch."]],
+    [
+      2021,
+      [
+        "Head of Design for Amazon Alexa (2021–2022).",
+        "Led Alexa’s end-to-end experience, including Hey Disney!",
+      ],
+    ],
+    [
+      2022,
+      [
+        "Design Principal for Amazon Alexa (2022–2023).",
+        "Set the vision and strategy for Alexa’s move into LLMs.",
+      ],
+    ],
+    [
+      2023,
+      [
+        "Head of Design, Commerce at Cash App (2023–2025).",
+        "Led design across Cash App, Afterpay and Cash for Business.",
+      ],
+    ],
+    [2024, ["Joined the board of Hoyt Arboretum Friends (2024–present)."]],
+    [
+      2025,
+      [
+        "Design Director at Shopify (2025–present).",
+        "Leading product and brand design to help merchants grow their businesses.",
+      ],
+    ],
   ]
 
   const milestoneYears = [...source.matchAll(/^  (\d{4}): \{$/gm)].map(
@@ -115,11 +230,21 @@ test("organization milestones carry company icons through Toby's registry", () =
     [2005, [{ id: "london-games-festival", name: "London Games Festival" }]],
     [2009, [{ id: "chromaroma", name: "Chromaroma" }]],
     [2011, [{ id: "akqa", name: "AKQA" }]],
-    [2013, [{ id: "trackshift", name: "TrackShift" }]],
+    [
+      2013,
+      [
+        { id: "akqa", name: "AKQA" },
+        { id: "trackshift", name: "TrackShift" },
+      ],
+    ],
     [2015, [{ id: "a-strangely-isolated-place", name: "A Strangely Isolated Place" }]],
+    [2016, [{ id: "akqa", name: "AKQA" }]],
     [2017, [{ id: "jaguar-land-rover", name: "Jaguar Land Rover" }]],
+    [2018, [{ id: "akqa", name: "AKQA" }]],
     [2019, [{ id: "nike", name: "Nike" }]],
+    [2020, [{ id: "nike", name: "Nike" }]],
     [2021, [{ id: "amazon-alexa", name: "Amazon Alexa" }]],
+    [2022, [{ id: "amazon-alexa", name: "Amazon Alexa" }]],
     [2023, [{ id: "cash-app", name: "Cash App" }]],
     [2024, [{ id: "hoyt-arboretum-friends", name: "Hoyt Arboretum Friends" }]],
     [2025, [{ id: "shopify", name: "Shopify" }]],
@@ -171,9 +296,13 @@ test("organization milestones carry company icons through Toby's registry", () =
 
   assert.deepEqual(
     [...registeredCompanyIds, ...reviewedInitialFallbackIds].sort(),
-    expectedCompanies.flatMap(([, companies]) =>
-      companies.map((company) => company.id),
-    ).sort(),
+    [
+      ...new Set(
+        expectedCompanies.flatMap(([, companies]) =>
+          companies.map((company) => company.id),
+        ),
+      ),
+    ].sort(),
   )
 
   for (const id of registeredCompanyIds) {
@@ -207,6 +336,36 @@ test("organization milestones carry company icons through Toby's registry", () =
   }
   assert.match(page, /import \{ TobyCompanyIcons \} from ["']@\/components\/toby-company-icons["']/)
   assert.match(page, /<TobyCompanyIcons\s*\/>/)
+})
+
+test("sourced company marks use the approved 2× dimensions", () => {
+  const registry = read("components/toby-company-icons.tsx")
+  const expectedLogoSizes = {
+    "liverpool-john-moores-university": "h-8 w-8",
+    "dun-and-bradstreet": "h-6 w-32",
+    "ntl-interactive": "h-7 w-20",
+    mtv: "h-8 w-10",
+    "london-games-festival": "h-6 w-32",
+    akqa: "h-6 w-14",
+    "a-strangely-isolated-place": "h-8 w-8",
+    "jaguar-land-rover": "h-8 w-8",
+    nike: "h-6 w-12",
+    "amazon-alexa": "h-6 w-32",
+    "cash-app": "h-8 w-8",
+    "hoyt-arboretum-friends": "h-6 w-32",
+    shopify: "h-8 w-8",
+  }
+
+  for (const [id, sizeClassName] of Object.entries(expectedLogoSizes)) {
+    const escapedId = id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    const entry = registry.match(
+      new RegExp(
+        `(?:["']${escapedId}["']|\\b${escapedId})\\s*:\\s*\\{[\\s\\S]*?sizeClassName:\\s*["']([^"']+)["']`,
+      ),
+    )
+
+    assert.equal(entry?.[1], sizeClassName, `${id} should use its 2× logo size`)
+  }
 })
 
 test("the upstream demo and registry files remain available", () => {

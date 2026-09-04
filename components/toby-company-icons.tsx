@@ -83,35 +83,35 @@ const HoytArboretumFriendsIcon = createMaskedBrandIcon(
 registerCompanyIcons({
   "liverpool-john-moores-university": {
     icon: LiverpoolJohnMooresUniversityIcon,
-    sizeClassName: "h-4 w-4",
+    sizeClassName: "h-8 w-8",
   },
   "dun-and-bradstreet": {
     icon: DunAndBradstreetIcon,
-    sizeClassName: "h-3 w-16",
+    sizeClassName: "h-6 w-32",
   },
-  "ntl-interactive": { icon: NtlIcon, sizeClassName: "h-3.5 w-10" },
-  mtv: { icon: MtvIcon, sizeClassName: "h-4 w-5" },
+  "ntl-interactive": { icon: NtlIcon, sizeClassName: "h-7 w-20" },
+  mtv: { icon: MtvIcon, sizeClassName: "h-8 w-10" },
   "london-games-festival": {
     icon: LondonGamesFestivalIcon,
-    sizeClassName: "h-3 w-16",
+    sizeClassName: "h-6 w-32",
   },
-  akqa: { icon: AkqaIcon, sizeClassName: "h-3 w-7" },
+  akqa: { icon: AkqaIcon, sizeClassName: "h-6 w-14" },
   "a-strangely-isolated-place": {
     icon: AStrangelyIsolatedPlaceIcon,
-    sizeClassName: "h-4 w-4",
+    sizeClassName: "h-8 w-8",
   },
   "jaguar-land-rover": {
     icon: JaguarLandRoverIcon,
-    sizeClassName: "h-4 w-4",
+    sizeClassName: "h-8 w-8",
   },
-  nike: { icon: NikeIcon, sizeClassName: "h-3 w-6" },
-  "amazon-alexa": { icon: AmazonAlexaIcon, sizeClassName: "h-3 w-16" },
-  "cash-app": { icon: CashAppIcon, sizeClassName: "h-4 w-4" },
+  nike: { icon: NikeIcon, sizeClassName: "h-6 w-12" },
+  "amazon-alexa": { icon: AmazonAlexaIcon, sizeClassName: "h-6 w-32" },
+  "cash-app": { icon: CashAppIcon, sizeClassName: "h-8 w-8" },
   "hoyt-arboretum-friends": {
     icon: HoytArboretumFriendsIcon,
-    sizeClassName: "h-3 w-16",
+    sizeClassName: "h-6 w-32",
   },
-  shopify: { icon: ShopifyIcon, sizeClassName: "h-4 w-4" },
+  shopify: { icon: ShopifyIcon, sizeClassName: "h-8 w-8" },
 })
 
 /** Render once so Toby's company marks register before the timeline renders. */
