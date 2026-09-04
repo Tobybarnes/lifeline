@@ -94,6 +94,121 @@ test("the home page and metadata belong to Toby", () => {
   assert.match(layout, /A year-by-year record of Toby Barnes's work and life\./)
 })
 
+test("organization milestones carry company icons through Toby's registry", () => {
+  const source = read("lib/toby.ts")
+  const page = read("app/page.tsx")
+  const registryPath = "components/toby-company-icons.tsx"
+
+  const expectedCompanies = [
+    [1990, [{ id: "liverpool-john-moores-university", name: "Liverpool John Moores University" }]],
+    [1992, [{ id: "dun-and-bradstreet", name: "Dun & Bradstreet" }]],
+    [1996, [{ id: "ntl-interactive", name: "NTL Interactive" }]],
+    [1998, [{ id: "mtv", name: "MTV" }]],
+    [2003, [{ id: "twelve-ten", name: "Twelve Ten" }]],
+    [
+      2004,
+      [
+        { id: "mudlark-digital", name: "Mudlark Digital" },
+        { id: "pixel-lab", name: "Pixel-Lab" },
+      ],
+    ],
+    [2005, [{ id: "london-games-festival", name: "London Games Festival" }]],
+    [2009, [{ id: "chromaroma", name: "Chromaroma" }]],
+    [2011, [{ id: "akqa", name: "AKQA" }]],
+    [2013, [{ id: "trackshift", name: "TrackShift" }]],
+    [2015, [{ id: "a-strangely-isolated-place", name: "A Strangely Isolated Place" }]],
+    [2017, [{ id: "jaguar-land-rover", name: "Jaguar Land Rover" }]],
+    [2019, [{ id: "nike", name: "Nike" }]],
+    [2021, [{ id: "amazon-alexa", name: "Amazon Alexa" }]],
+    [2023, [{ id: "cash-app", name: "Cash App" }]],
+    [2024, [{ id: "hoyt-arboretum-friends", name: "Hoyt Arboretum Friends" }]],
+    [2025, [{ id: "shopify", name: "Shopify" }]],
+  ]
+
+  for (const [year, companies] of expectedCompanies) {
+    const milestone = source.match(
+      new RegExp(`^  ${year}: \\{[\\s\\S]*?^  \\},$`, "m"),
+    )?.[0]
+
+    assert.ok(milestone, `missing ${year} milestone`)
+    for (const company of companies) {
+      assert.ok(
+        milestone.includes(`id: ${JSON.stringify(company.id)}`),
+        `${year} is missing company id ${company.id}`,
+      )
+      assert.ok(
+        milestone.includes(`name: ${JSON.stringify(company.name)}`),
+        `${year} is missing company name ${company.name}`,
+      )
+    }
+  }
+
+  assert.equal(existsSync(at(registryPath)), true, `${registryPath} is missing`)
+  const registry = read(registryPath)
+  assert.match(registry, /registerCompanyIcons\(/)
+  const registeredCompanyIds = [
+    "liverpool-john-moores-university",
+    "dun-and-bradstreet",
+    "ntl-interactive",
+    "mtv",
+    "london-games-festival",
+    "akqa",
+    "a-strangely-isolated-place",
+    "jaguar-land-rover",
+    "nike",
+    "amazon-alexa",
+    "cash-app",
+    "hoyt-arboretum-friends",
+    "shopify",
+  ]
+  const reviewedInitialFallbackIds = [
+    "twelve-ten",
+    "mudlark-digital",
+    "pixel-lab",
+    "chromaroma",
+    "trackshift",
+  ]
+
+  assert.deepEqual(
+    [...registeredCompanyIds, ...reviewedInitialFallbackIds].sort(),
+    expectedCompanies.flatMap(([, companies]) =>
+      companies.map((company) => company.id),
+    ).sort(),
+  )
+
+  for (const id of registeredCompanyIds) {
+    const registryKey = id.includes("-")
+      ? new RegExp(`["']${id}["']\\s*:`)
+      : new RegExp(`\\b${id}\\s*:`)
+    assert.match(registry, registryKey, `${id} is missing a registered logo`)
+  }
+
+  for (const id of reviewedInitialFallbackIds) {
+    const registryKey = id.includes("-")
+      ? new RegExp(`["']${id}["']\\s*:`)
+      : new RegExp(`\\b${id}\\s*:`)
+    assert.doesNotMatch(
+      registry,
+      registryKey,
+      `${id} has a logo and no longer belongs in the fallback allowlist`,
+    )
+  }
+
+  const assetPaths = [
+    ...registry.matchAll(
+      /createMaskedBrandIcon\(\s*["']([^"']+)["']/g,
+    ),
+  ].map((match) => match[1])
+
+  assert.equal(assetPaths.length, 10)
+  for (const assetPath of assetPaths) {
+    assert.match(assetPath, /^\/images\/toby\/companies\//)
+    assert.ok(existsSync(at(`public${assetPath}`)), `${assetPath} is missing`)
+  }
+  assert.match(page, /import \{ TobyCompanyIcons \} from ["']@\/components\/toby-company-icons["']/)
+  assert.match(page, /<TobyCompanyIcons\s*\/>/)
+})
+
 test("the upstream demo and registry files remain available", () => {
   for (const file of [
     "app/embed/page.tsx",

@@ -6,6 +6,7 @@ import {
   LifelineStage,
 } from "@/components/lifeline-shell"
 import { ThemeSwitcher } from "@/components/theme-switcher"
+import { TobyCompanyIcons } from "@/components/toby-company-icons"
 import { TOBY_LINKEDIN_URL, tobyLifeline } from "@/lib/toby"
 
 const UPSTREAM_URL = "https://github.com/evilrabbit/lifeline"
@@ -15,6 +16,7 @@ const LINK_CLASS_NAME =
 export default function Home() {
   return (
     <LifelineShell>
+      <TobyCompanyIcons />
       <LifelineNav
         logo={<span className="text-balance text-sm font-medium">Toby Barnes</span>}
         logoLabel="Toby Barnes"
