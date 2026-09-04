@@ -18,6 +18,7 @@ test("Toby's record contains the confirmed LinkedIn and family chronology", () =
   assert.match(source, /https:\/\/www\.linkedin\.com\/in\/tobybarnes\//)
 
   const expectedMilestones = [
+    [1973, []],
     [
       1990,
       [
@@ -48,6 +49,8 @@ test("Toby's record contains the confirmed LinkedIn and family chronology", () =
       ],
     ],
     [1999, ["Met Emily."]],
+    [2001, []],
+    [2002, []],
     [
       2003,
       [
@@ -188,6 +191,42 @@ test("Toby's record contains the confirmed LinkedIn and family chronology", () =
     assert.match(mediaPath, /^\/images\/toby\//)
     assert.ok(existsSync(at(`public${mediaPath}`)), `${mediaPath} is missing`)
   }
+})
+
+test("Toby's timeline marks each country transition with a flag", () => {
+  const source = read("lib/toby.ts")
+  const types = read("components/lifeline/types.ts")
+  const labels = read("components/lifeline/lifeline-labels.tsx")
+  const desktop = read("components/lifeline/lifeline-desktop.tsx")
+  const vertical = read("components/lifeline/lifeline-vertical.tsx")
+
+  const expectedCountries = [
+    [1973, { flag: "🇬🇧", name: "United Kingdom" }],
+    [2001, { flag: "🇦🇺", name: "Australia" }],
+    [2002, { flag: "🇬🇧", name: "United Kingdom" }],
+    [2013, { flag: "🇺🇸", name: "United States" }],
+  ]
+
+  for (const [year, country] of expectedCountries) {
+    const milestone = source.match(
+      new RegExp(`^  ${year}: \\{[\\s\\S]*?^  \\},$`, "m"),
+    )?.[0]
+
+    assert.ok(milestone, `missing ${year} country transition`)
+    assert.ok(
+      milestone.includes(`flag: ${JSON.stringify(country.flag)}`),
+      `${year} is missing ${country.flag}`,
+    )
+    assert.ok(
+      milestone.includes(`name: ${JSON.stringify(country.name)}`),
+      `${year} is missing ${country.name}`,
+    )
+  }
+
+  assert.match(types, /country\?: LifelineCountry/)
+  assert.match(labels, />\s*Country\s*</)
+  assert.match(desktop, /markers\.some\(\(marker\) => marker\.country\)/)
+  assert.match(vertical, /markers\.some\(\(marker\) => marker\.country\)/)
 })
 
 test("the home page and metadata belong to Toby", () => {

@@ -6,8 +6,10 @@ export const LIFELINE_STICKY_LEFT = 20
 
 export function LifelineStickyLabels({
   showAge = true,
+  showCountry = false,
 }: {
   showAge?: boolean
+  showCountry?: boolean
 }) {
   return (
     <div
@@ -16,6 +18,11 @@ export function LifelineStickyLabels({
       aria-hidden="true"
     >
       <div className="flex flex-col items-start text-left">
+        {showCountry && (
+          <p className="mb-5 h-4 text-balance text-[11px] font-medium uppercase leading-4 tracking-[0.08em] text-zinc-500 transition-colors duration-300 dark:text-zinc-600">
+            Country
+          </p>
+        )}
         {showAge && (
           <p className="mb-5 h-4 text-[11px] font-medium uppercase leading-4 tracking-[0.08em] text-zinc-500 transition-colors duration-300 dark:text-zinc-600">
             Age

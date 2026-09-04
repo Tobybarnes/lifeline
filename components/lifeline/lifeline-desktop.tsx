@@ -24,6 +24,7 @@ export function LifelineDesktop({
   showAge = true,
   yearClassName,
 }: LifelineProps) {
+  const showCountry = markers.some((marker) => marker.country)
   const widths = useMemo(
     () =>
       markers.map((marker, index) =>
@@ -91,6 +92,16 @@ export function LifelineDesktop({
     "--lifeline-rail-ms": `${intro.railDuration}ms`,
   } as CSSProperties
 
+  // The year row is 44px tall; each optional metadata row adds 36px.
+  // Keeping the rail derived from those rows makes its ticks meet the
+  // labels whether the consumer shows age, country, both, or neither.
+  const railTop =
+    44 + (showAge ? 36 : 0) + (showCountry ? 36 : 0)
+  const trackStyle = {
+    width: trackWidth,
+    "--lifeline-rail": `${railTop}px`,
+  } as CSSProperties
+
   return (
     <section
       ref={sectionRef}
@@ -132,11 +143,8 @@ export function LifelineDesktop({
       >
         <div
           ref={trackRef}
-          className={cn(
-            "relative flex w-max items-start will-change-transform [--lifeline-people-top:calc(14.5rem+40px)]",
-            showAge ? "[--lifeline-rail:5rem]" : "[--lifeline-rail:2.75rem]",
-          )}
-          style={{ width: trackWidth }}
+          className="relative flex w-max items-start will-change-transform [--lifeline-people-top:calc(14.5rem+40px)]"
+          style={trackStyle}
         >
           {/*
             LIFELINE_STICKY_SHIELD_WIDTH reserves this column at the head of
@@ -158,7 +166,10 @@ export function LifelineDesktop({
             style={{ width: LIFELINE_STICKY_SHIELD_WIDTH }}
           >
             <div className={cn(showIntro && "lifeline-labels-intro")}>
-              <LifelineStickyLabels showAge={showAge} />
+              <LifelineStickyLabels
+                showAge={showAge}
+                showCountry={showCountry}
+              />
             </div>
           </div>
 
@@ -184,6 +195,7 @@ export function LifelineDesktop({
                   birthYear={birthYear}
                   minWidth={widths[index]}
                   showAge={showAge}
+                  showCountry={showCountry}
                   yearClassName={yearClassName}
                   animateIntro={showIntro}
                   introDelay={intro.getMarkerDelay(index)}

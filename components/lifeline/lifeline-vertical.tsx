@@ -12,6 +12,7 @@ import {
 import { Film, Image as ImageIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { CompanyIcon } from "./company-icon"
+import { LifelineCountryFlag } from "./lifeline-country"
 import {
   getLifelineEventEffect,
   getLifelineEventImage,
@@ -31,8 +32,10 @@ import { useLifelineIntro } from "./use-lifeline-intro"
 import { useLifelineVerticalScroll } from "./use-lifeline-vertical-scroll"
 
 const GRID_CLASS = "grid grid-cols-[2.5rem_1rem_1fr] gap-x-3"
+const COUNTRY_GRID_CLASS = "grid grid-cols-[3rem_1rem_1fr] gap-x-3"
 const YEAR_ONLY_GRID_CLASS = "grid grid-cols-[1rem_1fr] gap-x-3"
 const RAIL_LEFT = "calc(2.5rem + 0.75rem + 0.5rem)"
+const COUNTRY_RAIL_LEFT = "calc(3rem + 0.75rem + 0.5rem)"
 const YEAR_ONLY_RAIL_LEFT = "0.5rem"
 
 /**
@@ -159,6 +162,7 @@ const LifelineVerticalEntry = forwardRef<
     marker: LifelineMarker
     birthYear: number
     showAge?: boolean
+    showCountry?: boolean
     yearClassName?: string
     animateIntro?: boolean
     introDelay?: number
@@ -170,6 +174,7 @@ const LifelineVerticalEntry = forwardRef<
     marker,
     birthYear,
     showAge = true,
+    showCountry = false,
     yearClassName,
     animateIntro = false,
     introDelay = 0,
@@ -179,7 +184,12 @@ const LifelineVerticalEntry = forwardRef<
   ref,
 ) {
   const age = marker.age ?? marker.year - birthYear
-  const gridClass = showAge ? GRID_CLASS : YEAR_ONLY_GRID_CLASS
+  const showSideColumn = showAge || showCountry
+  const gridClass = showCountry
+    ? COUNTRY_GRID_CLASS
+    : showAge
+      ? GRID_CLASS
+      : YEAR_ONLY_GRID_CLASS
   const people = aggregateLifelinePeople(marker)
   const photos = marker.photos ?? []
   const hasContent = hasMarkerContent(marker) || photos.length > 0
@@ -219,11 +229,17 @@ const LifelineVerticalEntry = forwardRef<
         }}
       >
         <div className={`${gridClass} items-center`}>
-          {showAge && (
+          {showCountry ? (
+            <div className="flex min-h-4 items-center justify-end leading-4">
+              {marker.country && (
+                <LifelineCountryFlag country={marker.country} />
+              )}
+            </div>
+          ) : showAge ? (
             <p className="text-right text-[11px] font-medium leading-4 tabular-nums text-zinc-500 transition-colors duration-300 dark:text-zinc-600">
               {age}
             </p>
-          )}
+          ) : null}
 
           <div className="flex items-center justify-center">
             <RailTick />
@@ -241,7 +257,7 @@ const LifelineVerticalEntry = forwardRef<
 
         {hasContent && (
           <div className={`${gridClass} mt-6`}>
-            {showAge && <div aria-hidden="true" />}
+            {showSideColumn && <div aria-hidden="true" />}
             <div aria-hidden="true" />
             <div className="min-w-0 text-zinc-500 transition-colors duration-300 dark:text-zinc-400">
               {marker.badges && marker.badges.length > 0 && (
@@ -320,6 +336,17 @@ export function LifelineVertical({
   showAge = true,
   yearClassName,
 }: LifelineProps) {
+  const showCountry = markers.some((marker) => marker.country)
+  const gridClass = showCountry
+    ? COUNTRY_GRID_CLASS
+    : showAge
+      ? GRID_CLASS
+      : YEAR_ONLY_GRID_CLASS
+  const railLeft = showCountry
+    ? COUNTRY_RAIL_LEFT
+    : showAge
+      ? RAIL_LEFT
+      : YEAR_ONLY_RAIL_LEFT
   // Only an explicit `mode` embeds the vertical layout. `"auto"` measures
   // scrollability on desktop, but the mobile layout *is* a vertical
   // scroller inside a scrolling stage, so that test would read every
@@ -455,15 +482,19 @@ export function LifelineVertical({
     >
       <div
         className={cn(
-          `${showAge ? GRID_CLASS : YEAR_ONLY_GRID_CLASS} mb-6 items-end`,
+          `${gridClass} mb-6 items-end`,
           showIntro && "lifeline-labels-intro",
         )}
       >
-        {showAge && (
+        {showCountry ? (
+          <p className="text-balance text-right text-[9px] font-medium uppercase leading-4 tracking-[0.04em] text-zinc-500 transition-colors duration-300 dark:text-zinc-600">
+            Country
+          </p>
+        ) : showAge ? (
           <p className="text-right text-[11px] font-medium uppercase leading-4 tracking-[0.08em] text-zinc-500 transition-colors duration-300 dark:text-zinc-600">
             Age
           </p>
-        )}
+        ) : null}
         <div aria-hidden="true" />
         <p className="text-[11px] font-medium uppercase leading-5 tracking-[0.08em] text-zinc-500 transition-colors duration-300 dark:text-zinc-600">
           Years
@@ -474,7 +505,10 @@ export function LifelineVertical({
         <div
           aria-hidden="true"
           className="pointer-events-none absolute bottom-0 top-0 overflow-hidden -translate-x-1/2"
-          style={{ left: showAge ? RAIL_LEFT : YEAR_ONLY_RAIL_LEFT, width: 1 }}
+          style={{
+            left: railLeft,
+            width: 1,
+          }}
         >
           <div
             className={cn(
@@ -492,6 +526,7 @@ export function LifelineVertical({
               marker={marker}
               birthYear={birthYear}
               showAge={showAge}
+              showCountry={showCountry}
               yearClassName={yearClassName}
               animateIntro={animateEntries}
               revealPending={showIntro && revealOnScroll}

@@ -7,6 +7,11 @@ export const TOBY_LINKEDIN_URL = "https://www.linkedin.com/in/tobybarnes/"
 // Initial chronology verified from the public-facing profile on 2026-09-03.
 // Recheck entries marked "present" before deployment.
 const milestones: LifelineMilestones = {
+  1973: {
+    id: "united-kingdom",
+    country: { flag: "🇬🇧", name: "United Kingdom" },
+    events: [],
+  },
   1990: {
     id: "liverpool-john-moores-university",
     companies: [
@@ -48,6 +53,16 @@ const milestones: LifelineMilestones = {
   1999: {
     id: "met-emily",
     events: ["Met Emily."],
+  },
+  2001: {
+    id: "australia",
+    country: { flag: "🇦🇺", name: "Australia" },
+    events: [],
+  },
+  2002: {
+    id: "returned-to-united-kingdom",
+    country: { flag: "🇬🇧", name: "United Kingdom" },
+    events: [],
   },
   2003: {
     id: "twelve-ten",
@@ -106,6 +121,7 @@ const milestones: LifelineMilestones = {
   },
   2013: {
     id: "trackshift-advisor",
+    country: { flag: "🇺🇸", name: "United States" },
     companies: [
       { id: "akqa", name: "AKQA" },
       { id: "trackshift", name: "TrackShift" },

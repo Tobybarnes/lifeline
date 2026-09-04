@@ -18,6 +18,11 @@ export interface LifelineCompany {
   name: string
 }
 
+export interface LifelineCountry {
+  flag: string
+  name: string
+}
+
 export type LifelineEventSegment =
   | { type: "text"; value: string }
   | { type: "link"; value: string; href: string }
@@ -70,6 +75,8 @@ export interface LifelineMarker {
   age?: number | string
   /** Shown in place of the raw year — e.g. "Jun 16" on a day-based timeline. */
   label?: string
+  /** A country transition shown in the timeline's country row. */
+  country?: LifelineCountry
   events: LifelineEvent[]
   /** Small emblems (team shields etc.) rendered above the events. */
   badges?: { src: string; alt: string }[]
