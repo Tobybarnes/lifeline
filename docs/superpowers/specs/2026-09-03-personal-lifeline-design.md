@@ -1,7 +1,7 @@
 # Personal Lifeline website design
 
 Date: 2026-09-03
-Status: Approved in conversation; awaiting written-spec review
+Status: Approved in conversation
 
 ## Purpose
 
@@ -103,10 +103,11 @@ Month-level positioning is outside this scope.
 
 ## LinkedIn collection
 
-Toby will provide the exact LinkedIn profile URL when collection begins. The
-first pass collects only information relevant to the timeline:
+The confirmed source profile is
+`https://www.linkedin.com/in/tobybarnes/`. The first pass collects only
+information relevant to the timeline:
 
-- role and company names;
+- company and project names, plus role titles where explicitly confirmed;
 - start and end dates;
 - locations and international moves stated on the profile;
 - education where it materially explains the chronology;
@@ -118,24 +119,23 @@ form a draft rather than unquestioned final copy. Dates and claims are checked
 against the visible source, and uncertain items are marked for Toby's review
 instead of guessed.
 
+The captured first-pass chronology confirms organization or project names and
+date ranges. Exact titles that were not retained in that capture stay out of
+the first version until the profile is checked again.
+
 The collected work history is translated directly into `lib/toby.ts`. Personal
 milestones that do not appear on LinkedIn are added only from Toby's own input.
 
 ## Content intake gate
 
-Content work begins after Toby supplies or confirms all of the following:
+Toby has confirmed the LinkedIn profile above and approved `1973` as the
+public birth year. Those two facts are enough to build the first work-history
+version.
 
-- the exact LinkedIn profile URL;
-- permission to show his birth year in the public timeline;
-- the public facts and year for the company sale;
-- the personal milestones to include, with years;
-- any images or video approved for public use;
-- the public profile links that should appear in the navigation.
-
-The exact birthday is not collected or published. Lifeline's age labels will
-mean the age reached during each calendar year. If the birth year is not
-approved for public display, implementation pauses for a separate design
-decision because the age row is part of the existing component.
+The company sale, children, other personal milestones, media, and additional
+profile links remain excluded until Toby supplies or confirms them. The exact
+birthday is not collected or published. Lifeline's age labels will mean the
+age reached during each calendar year.
 
 ## Public-content boundaries
 
