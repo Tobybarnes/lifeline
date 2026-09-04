@@ -71,3 +71,22 @@ test("Toby's record contains only the confirmed first-pass chronology", () => {
     assert.ok(existsSync(at(`public${mediaPath}`)), `${mediaPath} is missing`)
   }
 })
+
+test("the home page and metadata belong to Toby", () => {
+  const page = read("app/page.tsx")
+  const layout = read("app/layout.tsx")
+
+  assert.match(page, /from ["']@\/lib\/toby["']/)
+  assert.match(page, /markers=\{tobyLifeline\.markers\}/)
+  assert.match(page, /birthYear=\{tobyLifeline\.birthYear\}/)
+  assert.match(page, /TOBY_LINKEDIN_URL/)
+  assert.match(page, /Built with Lifeline/)
+  assert.match(page, /https:\/\/github\.com\/evilrabbit\/lifeline/)
+  assert.equal((page.match(/evilrabbit/gi) ?? []).length, 1)
+  assert.doesNotMatch(
+    page,
+    /evilrabbitLifeline|RabbitLogo|DemoCompanyIcons|CopyCommand|LifelineLegend/,
+  )
+  assert.match(layout, /title:\s*["']Toby Barnes \| Lifeline["']/)
+  assert.match(layout, /A year-by-year record of Toby Barnes's work and life\./)
+})

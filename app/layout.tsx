@@ -9,9 +9,8 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Lifeline",
-  description:
-    "A timeline component for the stories that unfold over time — a career, a company, a journey. Ships as a shadcn registry.",
+  title: "Toby Barnes | Lifeline",
+  description: "A year-by-year record of Toby Barnes's work and life.",
 };
 
 export default function RootLayout({

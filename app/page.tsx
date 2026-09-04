@@ -1,55 +1,53 @@
-import { Lifeline, LifelineLegend } from "@/components/lifeline"
+import { Lifeline } from "@/components/lifeline"
 import {
   LifelineFooter,
   LifelineNav,
   LifelineShell,
   LifelineStage,
 } from "@/components/lifeline-shell"
-import { DemoCompanyIcons } from "@/components/demo-company-icons"
 import { ThemeSwitcher } from "@/components/theme-switcher"
-import { CopyCommand } from "@/components/copy-command"
-import { RabbitLogo } from "@/components/rabbit-logo"
-import { evilrabbitLifeline } from "@/lib/evilrabbit"
+import { TOBY_LINKEDIN_URL, tobyLifeline } from "@/lib/toby"
+
+const UPSTREAM_URL = "https://github.com/evilrabbit/lifeline"
+const LINK_CLASS_NAME =
+  "inline-flex min-h-11 items-center text-balance text-sm text-zinc-500 transition-colors duration-300 hover:text-black dark:hover:text-white"
 
 export default function Home() {
   return (
     <LifelineShell>
-      {/* The same shell the registry ships as `page` — the nav's
-          capped inner container is what the rail aligns its start and
-          end to. */}
       <LifelineNav
-        logo={<RabbitLogo className="h-6 w-6" />}
-        logoLabel="Evil Rabbit — Lifeline"
+        logo={<span className="text-balance text-sm font-medium">Toby Barnes</span>}
+        logoLabel="Toby Barnes"
       >
-        {/* The /embed demo is unlisted for now — the route still works,
-            it just isn't linked from here yet. */}
         <a
-          href="https://github.com/evilrabbit/lifeline"
+          href={TOBY_LINKEDIN_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm text-zinc-500 transition-colors duration-300 hover:text-black dark:hover:text-white"
+          className={LINK_CLASS_NAME}
         >
-          GitHub
+          LinkedIn
         </a>
       </LifelineNav>
 
-      <DemoCompanyIcons />
-
       <LifelineStage>
         <Lifeline
-          markers={evilrabbitLifeline.markers}
-          birthYear={evilrabbitLifeline.birthYear}
-          title={evilrabbitLifeline.name}
+          markers={tobyLifeline.markers}
+          birthYear={tobyLifeline.birthYear}
+          title={tobyLifeline.name}
           className="h-full"
         />
       </LifelineStage>
 
       <LifelineFooter>
-        <div className="flex items-center gap-6">
-          <ThemeSwitcher />
-          <LifelineLegend />
-        </div>
-        <CopyCommand command="npx shadcn add evilrabbit/lifeline/personal" />
+        <ThemeSwitcher />
+        <a
+          href={UPSTREAM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={LINK_CLASS_NAME}
+        >
+          Built with Lifeline
+        </a>
       </LifelineFooter>
     </LifelineShell>
   )
