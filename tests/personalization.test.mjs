@@ -216,24 +216,9 @@ test("organization milestones carry company icons through Toby's registry", () =
     [1992, [{ id: "dun-and-bradstreet", name: "Dun & Bradstreet" }]],
     [1996, [{ id: "ntl-interactive", name: "NTL Interactive" }]],
     [1998, [{ id: "mtv", name: "MTV" }]],
-    [2003, [{ id: "twelve-ten", name: "Twelve Ten" }]],
-    [
-      2004,
-      [
-        { id: "mudlark-digital", name: "Mudlark Digital" },
-        { id: "pixel-lab", name: "Pixel-Lab" },
-      ],
-    ],
     [2005, [{ id: "london-games-festival", name: "London Games Festival" }]],
-    [2009, [{ id: "chromaroma", name: "Chromaroma" }]],
     [2011, [{ id: "akqa", name: "AKQA" }]],
-    [
-      2013,
-      [
-        { id: "akqa", name: "AKQA" },
-        { id: "trackshift", name: "TrackShift" },
-      ],
-    ],
+    [2013, [{ id: "akqa", name: "AKQA" }]],
     [2015, [{ id: "a-strangely-isolated-place", name: "A Strangely Isolated Place" }]],
     [2016, [{ id: "akqa", name: "AKQA" }]],
     [2017, [{ id: "jaguar-land-rover", name: "Jaguar Land Rover" }]],
@@ -265,6 +250,23 @@ test("organization milestones carry company icons through Toby's registry", () =
     }
   }
 
+  for (const year of [2003, 2004, 2009]) {
+    const milestoneWithoutFallback = source.match(
+      new RegExp(`^  ${year}: \\{[\\s\\S]*?^  \\},$`, "m"),
+    )?.[0]
+    assert.ok(milestoneWithoutFallback, `missing ${year} milestone`)
+    assert.doesNotMatch(milestoneWithoutFallback, /\bcompanies\s*:/)
+  }
+
+  const companies2013 = source.match(
+    /^  2013: \{[\s\S]*?^  \},$/m,
+  )?.[0]
+  assert.ok(companies2013, "missing 2013 milestone")
+  assert.doesNotMatch(
+    companies2013,
+    /\{ id: ["']trackshift["'], name: ["']TrackShift["'] \}/,
+  )
+
   assert.equal(existsSync(at(registryPath)), true, `${registryPath} is missing`)
   const registry = read(registryPath)
   assert.match(registry, /registerCompanyIcons\(/)
@@ -283,13 +285,7 @@ test("organization milestones carry company icons through Toby's registry", () =
     "hoyt-arboretum-friends",
     "shopify",
   ]
-  const reviewedInitialFallbackIds = [
-    "twelve-ten",
-    "mudlark-digital",
-    "pixel-lab",
-    "chromaroma",
-    "trackshift",
-  ]
+  const reviewedInitialFallbackIds = []
 
   assert.deepEqual(
     [...registeredCompanyIds, ...reviewedInitialFallbackIds].sort(),

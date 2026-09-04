@@ -59,14 +59,9 @@ const milestoneMetadata: Record<number, TobyMilestoneMetadata> = {
   },
   2003: {
     id: "twelve-ten",
-    companies: [{ id: "twelve-ten", name: "Twelve Ten" }],
   },
   2004: {
     id: "mudlark-digital-pixel-lab",
-    companies: [
-      { id: "mudlark-digital", name: "Mudlark Digital" },
-      { id: "pixel-lab", name: "Pixel-Lab" },
-    ],
   },
   2005: {
     id: "london-games-festival",
@@ -82,7 +77,6 @@ const milestoneMetadata: Record<number, TobyMilestoneMetadata> = {
   },
   2009: {
     id: "chromaroma",
-    companies: [{ id: "chromaroma", name: "Chromaroma" }],
   },
   2011: {
     id: "akqa",
@@ -91,10 +85,7 @@ const milestoneMetadata: Record<number, TobyMilestoneMetadata> = {
   2013: {
     id: "trackshift-advisor",
     country: { flag: "🇺🇸", name: "United States" },
-    companies: [
-      { id: "akqa", name: "AKQA" },
-      { id: "trackshift", name: "TrackShift" },
-    ],
+    companies: [{ id: "akqa", name: "AKQA" }],
   },
   2015: {
     id: "a-strangely-isolated-place",
