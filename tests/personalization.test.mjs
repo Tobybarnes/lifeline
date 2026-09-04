@@ -209,6 +209,28 @@ test("the home page and metadata belong to Toby", () => {
   assert.match(layout, /A year-by-year record of Toby Barnes's work and life\./)
 })
 
+test("Toby's timeline hides ages and uses smaller years without changing the demos", () => {
+  const home = read("app/page.tsx")
+  const upstreamPage = read("app/lifeline/page.tsx")
+  const embedPage = read("app/embed/page.tsx")
+  const types = read("components/lifeline/types.ts")
+  const desktop = read("components/lifeline/lifeline-desktop.tsx")
+  const vertical = read("components/lifeline/lifeline-vertical.tsx")
+
+  assert.match(home, /showAge=\{false\}/)
+  assert.match(home, /yearClassName=["']text-\[12px\]["']/)
+
+  for (const demo of [upstreamPage, embedPage]) {
+    assert.doesNotMatch(demo, /showAge=/)
+    assert.doesNotMatch(demo, /yearClassName=/)
+  }
+
+  assert.match(types, /showAge\?: boolean/)
+  assert.match(types, /yearClassName\?: string/)
+  assert.match(desktop, /showAge = true/)
+  assert.match(vertical, /showAge = true/)
+})
+
 test("organization milestones carry company icons through Toby's registry", () => {
   const source = read("lib/toby.ts")
   const page = read("app/page.tsx")

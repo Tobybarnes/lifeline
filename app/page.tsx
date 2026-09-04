@@ -37,6 +37,8 @@ export default function Home() {
           birthYear={tobyLifeline.birthYear}
           title={tobyLifeline.name}
           className="h-full"
+          showAge={false}
+          yearClassName="text-[12px]"
         />
       </LifelineStage>
 

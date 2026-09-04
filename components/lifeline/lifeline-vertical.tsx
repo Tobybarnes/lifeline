@@ -31,7 +31,9 @@ import { useLifelineIntro } from "./use-lifeline-intro"
 import { useLifelineVerticalScroll } from "./use-lifeline-vertical-scroll"
 
 const GRID_CLASS = "grid grid-cols-[2.5rem_1rem_1fr] gap-x-3"
+const YEAR_ONLY_GRID_CLASS = "grid grid-cols-[1rem_1fr] gap-x-3"
 const RAIL_LEFT = "calc(2.5rem + 0.75rem + 0.5rem)"
+const YEAR_ONLY_RAIL_LEFT = "0.5rem"
 
 /**
  * Above this many entries the delay-armed intro fades would promote
@@ -156,6 +158,8 @@ const LifelineVerticalEntry = forwardRef<
   {
     marker: LifelineMarker
     birthYear: number
+    showAge?: boolean
+    yearClassName?: string
     animateIntro?: boolean
     introDelay?: number
     introDuration?: number
@@ -165,6 +169,8 @@ const LifelineVerticalEntry = forwardRef<
   {
     marker,
     birthYear,
+    showAge = true,
+    yearClassName,
     animateIntro = false,
     introDelay = 0,
     introDuration = 420,
@@ -173,6 +179,7 @@ const LifelineVerticalEntry = forwardRef<
   ref,
 ) {
   const age = marker.age ?? marker.year - birthYear
+  const gridClass = showAge ? GRID_CLASS : YEAR_ONLY_GRID_CLASS
   const people = aggregateLifelinePeople(marker)
   const photos = marker.photos ?? []
   const hasContent = hasMarkerContent(marker) || photos.length > 0
@@ -211,23 +218,30 @@ const LifelineVerticalEntry = forwardRef<
             : {}),
         }}
       >
-        <div className={`${GRID_CLASS} items-center`}>
-          <p className="text-right text-[11px] font-medium leading-4 tabular-nums text-zinc-500 transition-colors duration-300 dark:text-zinc-600">
-            {age}
-          </p>
+        <div className={`${gridClass} items-center`}>
+          {showAge && (
+            <p className="text-right text-[11px] font-medium leading-4 tabular-nums text-zinc-500 transition-colors duration-300 dark:text-zinc-600">
+              {age}
+            </p>
+          )}
 
           <div className="flex items-center justify-center">
             <RailTick />
           </div>
 
-          <p className="whitespace-nowrap text-[15px] font-medium leading-5 tabular-nums text-zinc-500 transition-colors duration-300 dark:text-zinc-400">
+          <p
+            className={cn(
+              "whitespace-nowrap text-[15px] font-medium leading-5 tabular-nums text-zinc-500 transition-colors duration-300 dark:text-zinc-400",
+              yearClassName,
+            )}
+          >
             {marker.label ?? marker.year}
           </p>
         </div>
 
         {hasContent && (
-          <div className={`${GRID_CLASS} mt-6`}>
-            <div aria-hidden="true" />
+          <div className={`${gridClass} mt-6`}>
+            {showAge && <div aria-hidden="true" />}
             <div aria-hidden="true" />
             <div className="min-w-0 text-zinc-500 transition-colors duration-300 dark:text-zinc-400">
               {marker.badges && marker.badges.length > 0 && (
@@ -303,6 +317,8 @@ export function LifelineVertical({
   birthYear,
   title = "Lifeline",
   mode = "auto",
+  showAge = true,
+  yearClassName,
 }: LifelineProps) {
   // Only an explicit `mode` embeds the vertical layout. `"auto"` measures
   // scrollability on desktop, but the mobile layout *is* a vertical
@@ -437,10 +453,17 @@ export function LifelineVertical({
       )}
       style={showIntro ? introStyle : undefined}
     >
-      <div className={cn(`${GRID_CLASS} mb-6 items-end`, showIntro && "lifeline-labels-intro")}>
-        <p className="text-right text-[11px] font-medium uppercase leading-4 tracking-[0.08em] text-zinc-500 transition-colors duration-300 dark:text-zinc-600">
-          Age
-        </p>
+      <div
+        className={cn(
+          `${showAge ? GRID_CLASS : YEAR_ONLY_GRID_CLASS} mb-6 items-end`,
+          showIntro && "lifeline-labels-intro",
+        )}
+      >
+        {showAge && (
+          <p className="text-right text-[11px] font-medium uppercase leading-4 tracking-[0.08em] text-zinc-500 transition-colors duration-300 dark:text-zinc-600">
+            Age
+          </p>
+        )}
         <div aria-hidden="true" />
         <p className="text-[11px] font-medium uppercase leading-5 tracking-[0.08em] text-zinc-500 transition-colors duration-300 dark:text-zinc-600">
           Years
@@ -451,7 +474,7 @@ export function LifelineVertical({
         <div
           aria-hidden="true"
           className="pointer-events-none absolute bottom-0 top-0 overflow-hidden -translate-x-1/2"
-          style={{ left: RAIL_LEFT, width: 1 }}
+          style={{ left: showAge ? RAIL_LEFT : YEAR_ONLY_RAIL_LEFT, width: 1 }}
         >
           <div
             className={cn(
@@ -468,6 +491,8 @@ export function LifelineVertical({
               ref={(node) => setEntryRef(index, node)}
               marker={marker}
               birthYear={birthYear}
+              showAge={showAge}
+              yearClassName={yearClassName}
               animateIntro={animateEntries}
               revealPending={showIntro && revealOnScroll}
               introDelay={intro.getMarkerDelay(index)}
