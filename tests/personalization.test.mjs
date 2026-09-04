@@ -90,3 +90,36 @@ test("the home page and metadata belong to Toby", () => {
   assert.match(layout, /title:\s*["']Toby Barnes \| Lifeline["']/)
   assert.match(layout, /A year-by-year record of Toby Barnes's work and life\./)
 })
+
+test("upstream demo surfaces and personal media are absent", () => {
+  for (const file of [
+    "app/embed/page.tsx",
+    "app/lifeline/page.tsx",
+    "lib/evilrabbit.ts",
+    "lib/lifeline-personal.ts",
+    "lib/lifeline-company.ts",
+    "lib/lifeline-journey.ts",
+    "components/rabbit-logo.tsx",
+    "components/demo-company-icons.tsx",
+    "components/copy-command.tsx",
+    "registry.json",
+    "public/r",
+    "public/images/meeting-elon.jpg",
+    "public/images/meeting-elon.mp4",
+    "public/images/people",
+    "app/icon.svg",
+    "app/icon.png",
+    "app/apple-icon.png",
+  ]) {
+    assert.equal(existsSync(at(file)), false, `${file} should be removed`)
+  }
+})
+
+test("the reusable engine and license remain", () => {
+  assert.equal(existsSync(at("components/lifeline/lifeline.tsx")), true)
+  assert.equal(existsSync(at("components/lifeline-shell.tsx")), true)
+
+  const license = read("LICENSE")
+  assert.match(license, /MIT License/)
+  assert.match(license, /Copyright \(c\) 2026 Evil Rabbit/)
+})
