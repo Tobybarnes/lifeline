@@ -26,9 +26,13 @@ const milestones: LifelineMilestones = {
     id: "mtv",
     events: ["MTV (1998–2003)."],
   },
+  1999: {
+    id: "met-emily",
+    events: ["Met Emily."],
+  },
   2003: {
     id: "twelve-ten",
-    events: ["Twelve Ten (2003–2004)."],
+    events: ["Twelve Ten (2003–2004).", "Archie was born."],
   },
   2004: {
     id: "mudlark-digital-pixel-lab",
@@ -36,7 +40,15 @@ const milestones: LifelineMilestones = {
   },
   2005: {
     id: "london-games-festival",
-    events: ["London Games Festival (2005–2009)."],
+    events: ["London Games Festival (2005–2009).", "Robin was born."],
+  },
+  2006: {
+    id: "married",
+    events: ["Got married."],
+  },
+  2007: {
+    id: "fraser-born",
+    events: ["Fraser was born."],
   },
   2009: {
     id: "chromaroma",

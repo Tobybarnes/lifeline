@@ -28,9 +28,12 @@ test("Toby's record contains only the confirmed first-pass chronology", () => {
     [1992, ["Dun & Bradstreet (1992–1996)."]],
     [1996, ["NTL Interactive (1996–1998)."]],
     [1998, ["MTV (1998–2003)."]],
-    [2003, ["Twelve Ten (2003–2004)."]],
+    [1999, ["Met Emily."]],
+    [2003, ["Twelve Ten (2003–2004).", "Archie was born."]],
     [2004, ["Mudlark Digital / Pixel-Lab (2004–2011)."]],
-    [2005, ["London Games Festival (2005–2009)."]],
+    [2005, ["London Games Festival (2005–2009).", "Robin was born."]],
+    [2006, ["Got married."]],
+    [2007, ["Fraser was born."]],
     [2009, ["Chromaroma (2009–2011)."]],
     [2011, ["AKQA, London and later Portland (2011–2019)."]],
     [2013, ["TrackShift advisor (2013–2019)."]],
@@ -60,7 +63,7 @@ test("Toby's record contains only the confirmed first-pass chronology", () => {
     }
   }
 
-  assert.doesNotMatch(source, /\b(?:child|children|daughter|son|sold|sale)\b/i)
+  assert.doesNotMatch(source, /\b(?:daughter|son|sold|sale)\b/i)
 
   const media = [
     ...source.matchAll(/\b(?:src|video|photo):\s*["']([^"']+)["']/g),
