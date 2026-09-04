@@ -16,6 +16,7 @@
 - Keep `components/lifeline/` and `components/lifeline-shell.tsx` unchanged unless a verified defect blocks the approved content.
 - Use `1973` as the public birth year and `https://www.linkedin.com/in/tobybarnes/` as the source profile.
 - The initial record contains only the confirmed LinkedIn chronology. Do not add children, company-sale details, unverified moves, family data, images, video, or inferred job titles.
+- Include the single confirmed Education entry with its degree, 1990–1994 dates, and Role Playing Society chair activity. Do not infer another school.
 - Use `new Date().getFullYear()` in `lib/toby.ts` so living-person timelines do not require an annual edit.
 - Retain `LICENSE` unchanged and keep one visible `Built with Lifeline` link to `https://github.com/evilrabbit/lifeline`.
 - Keep `README.md` unchanged. Its registry instructions become known documentation debt until Toby separately approves a rewrite.
@@ -122,23 +123,29 @@ test("Toby's record contains only the confirmed first-pass chronology", () => {
   assert.match(source, /https:\/\/www\.linkedin\.com\/in\/tobybarnes\//)
 
   const expectedMilestones = [
-    [1990, "Liverpool John Moores University (1990–1994)."],
-    [1992, "Dun & Bradstreet (1992–1996)."],
-    [1996, "NTL Interactive (1996–1998)."],
-    [1998, "MTV (1998–2003)."],
-    [2003, "Twelve Ten (2003–2004)."],
-    [2004, "Mudlark Digital / Pixel-Lab (2004–2011)."],
-    [2005, "London Games Festival (2005–2009)."],
-    [2009, "Chromaroma (2009–2011)."],
-    [2011, "AKQA, London and later Portland (2011–2019)."],
-    [2013, "TrackShift advisor (2013–2019)."],
-    [2015, "A Strangely Isolated Place (2015–present)."],
-    [2017, "Jaguar Land Rover mentor (2017–2018)."],
-    [2019, "Nike (2019–2021)."],
-    [2021, "Amazon Alexa (2021–2023)."],
-    [2023, "Cash App (2023–2025)."],
-    [2024, "Hoyt Arboretum Friends board (2024–present)."],
-    [2025, "Shopify (2025–present)."],
+    [
+      1990,
+      [
+        "Liverpool John Moores University (1990–1994): Bachelor of Arts - BA, Business Information & Management (Business Administration and Marketing).",
+        "Chairman of the Role Playing Society for 4 years. :)",
+      ],
+    ],
+    [1992, ["Dun & Bradstreet (1992–1996)."]],
+    [1996, ["NTL Interactive (1996–1998)."]],
+    [1998, ["MTV (1998–2003)."]],
+    [2003, ["Twelve Ten (2003–2004)."]],
+    [2004, ["Mudlark Digital / Pixel-Lab (2004–2011)."]],
+    [2005, ["London Games Festival (2005–2009)."]],
+    [2009, ["Chromaroma (2009–2011)."]],
+    [2011, ["AKQA, London and later Portland (2011–2019)."]],
+    [2013, ["TrackShift advisor (2013–2019)."]],
+    [2015, ["A Strangely Isolated Place (2015–present)."]],
+    [2017, ["Jaguar Land Rover mentor (2017–2018)."]],
+    [2019, ["Nike (2019–2021)."]],
+    [2021, ["Amazon Alexa (2021–2023)."]],
+    [2023, ["Cash App (2023–2025)."]],
+    [2024, ["Hoyt Arboretum Friends board (2024–present)."]],
+    [2025, ["Shopify (2025–present)."]],
   ]
 
   const milestoneYears = [...source.matchAll(/^  (\d{4}): \{$/gm)].map(
@@ -149,11 +156,13 @@ test("Toby's record contains only the confirmed first-pass chronology", () => {
     expectedMilestones.map(([year]) => year),
   )
 
-  for (const [, event] of expectedMilestones) {
-    assert.ok(
-      source.includes(`events: [${JSON.stringify(event)}]`),
-      `missing confirmed event: ${event}`,
-    )
+  for (const [, events] of expectedMilestones) {
+    for (const event of events) {
+      assert.ok(
+        source.includes(JSON.stringify(event)),
+        `missing confirmed event: ${event}`,
+      )
+    }
   }
 
   assert.doesNotMatch(source, /\b(?:child|children|daughter|son|sold|sale)\b/i)
@@ -195,7 +204,10 @@ export const TOBY_LINKEDIN_URL = "https://www.linkedin.com/in/tobybarnes/"
 const milestones: LifelineMilestones = {
   1990: {
     id: "liverpool-john-moores-university",
-    events: ["Liverpool John Moores University (1990–1994)."],
+    events: [
+      "Liverpool John Moores University (1990–1994): Bachelor of Arts - BA, Business Information & Management (Business Administration and Marketing).",
+      "Chairman of the Role Playing Society for 4 years. :)",
+    ],
   },
   1992: {
     id: "dun-and-bradstreet",
@@ -627,6 +639,7 @@ Open `/` in Chrome with a 1440 by 900 viewport and check all of the following:
 8. Open LinkedIn and `Built with Lifeline`. They open new tabs at the exact confirmed profile and upstream repository URLs.
 9. Confirm the page contains no Evil Rabbit name, rabbit mark, biography, personal media, install command, or registry UI.
 10. Inspect the Chrome console after loading, scrolling, dragging, toggling the theme, and using the links. No new errors may come from Toby's data or page wiring.
+11. Navigate to 1990 and confirm the university, degree, date range, and Role Playing Society activity are readable without overlapping adjacent events.
 
 - [ ] **Step 3: Verify mobile Chrome at 390 by 844**
 
@@ -634,7 +647,7 @@ Use a 390 by 844 viewport and check:
 
 1. Reload with normal motion. The page uses Lifeline's three-column vertical layout while the navigation and footer remain stationary.
 2. Scroll the middle stage from 2026 to 1973 and back. Event text wraps within the right column and the page has no horizontal overflow.
-3. Spot-check `17 / 1990`, `38 / 2011`, `52 / 2025`, and `53 / 2026` in the age and year columns.
+3. Spot-check `17 / 1990`, `38 / 2011`, `52 / 2025`, and `53 / 2026` in the age and year columns. At 1990, the two education events wrap within the content column without overlapping later years.
 4. Toggle dark mode and back. The vertical rail, ticks, text, and links retain readable contrast.
 5. Tap LinkedIn and the upstream credit. Both open the correct targets without moving the timeline.
 6. Check 767 pixels wide remains vertical and 768 pixels wide switches to the horizontal layout.

@@ -123,14 +123,22 @@ The captured first-pass chronology confirms organization or project names and
 date ranges. Exact titles that were not retained in that capture stay out of
 the first version until the profile is checked again.
 
-The collected work history is translated directly into `lib/toby.ts`. Personal
-milestones that do not appear on LinkedIn are added only from Toby's own input.
+The LinkedIn Education section was checked on 2026-09-03. It contains one
+entry: Liverpool John Moores University, Bachelor of Arts - BA, Business
+Information & Management (Business Administration and Marketing), 1990–1994.
+The first timeline version also includes the listed activity, "Chairman of the
+Role Playing Society for 4 years. :)" The longer course description remains
+source context rather than timeline copy so the 1990 marker stays readable.
+
+The collected work and education history is translated directly into
+`lib/toby.ts`. Personal milestones that do not appear on LinkedIn are added
+only from Toby's own input.
 
 ## Content intake gate
 
 Toby has confirmed the LinkedIn profile above and approved `1973` as the
-public birth year. Those two facts are enough to build the first work-history
-version.
+public birth year. Those two facts are enough to build the first work and
+education version.
 
 The company sale, children, other personal milestones, media, and additional
 profile links remain excluded until Toby supplies or confirms them. The exact
@@ -204,11 +212,11 @@ checks at 1440 by 900 and 390 by 844 are part of completion.
 ## Completion criteria
 
 The first implementation is complete when the original Lifeline site runs
-locally as Toby's public timeline, the LinkedIn-derived work chronology is in
-one editable data file, selected personal milestones can be added without
-component changes, all original personal content has been removed from the
-rendered experience, and desktop and mobile behavior have been visibly
-verified.
+locally as Toby's public timeline, the LinkedIn-derived work and education
+chronology is in one editable data file, selected personal milestones can be
+added without component changes, all original personal content has been
+removed from the rendered experience, and desktop and mobile behavior has
+been visibly verified.
 
 Deployment and the personal GitHub remote follow as separate, approval-gated
 steps after content review.
