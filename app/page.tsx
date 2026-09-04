@@ -7,13 +7,15 @@ import {
 } from "@/components/lifeline-shell"
 import { ThemeSwitcher } from "@/components/theme-switcher"
 import { TobyCompanyIcons } from "@/components/toby-company-icons"
-import { TOBY_LINKEDIN_URL, tobyLifeline } from "@/lib/toby"
+import { getTobyLifeline, TOBY_LINKEDIN_URL } from "@/lib/toby"
 
 const UPSTREAM_URL = "https://github.com/evilrabbit/lifeline"
 const LINK_CLASS_NAME =
   "inline-flex min-h-11 items-center text-balance text-sm text-zinc-500 transition-colors duration-300 hover:text-black dark:hover:text-white"
 
 export default function Home() {
+  const tobyLifeline = getTobyLifeline()
+
   return (
     <LifelineShell>
       <TobyCompanyIcons />

@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "node:fs"
 import path from "node:path"
 import test from "node:test"
 import { fileURLToPath } from "node:url"
+import { parseLifelineMarkdown } from "../lib/lifeline-markdown.mts"
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const at = (file) => path.join(root, file)
@@ -10,6 +11,12 @@ const read = (file) => readFileSync(at(file), "utf8")
 
 test("Toby's record contains the confirmed LinkedIn and family chronology", () => {
   const source = read("lib/toby.ts")
+  const content = read("content/toby.md")
+  const eventsByYear = parseLifelineMarkdown(content, {
+    sourceName: "content/toby.md",
+    minYear: 1973,
+    maxYear: new Date().getFullYear(),
+  })
 
   assert.match(source, /name:\s*["']Toby Barnes["']/)
   assert.match(source, /birthYear:\s*1973/)
@@ -17,171 +24,35 @@ test("Toby's record contains the confirmed LinkedIn and family chronology", () =
   assert.match(source, /endYear:\s*CURRENT_YEAR/)
   assert.match(source, /https:\/\/www\.linkedin\.com\/in\/tobybarnes\//)
 
-  const expectedMilestones = [
-    [1973, []],
-    [
-      1990,
-      [
-        "Started a BA in Business Information & Management at Liverpool John Moores University (1990–1994).",
-        "Studied business, economics, systems thinking, databases and marketing.",
-        "Chairman of the Role Playing Society for 4 years. :)",
-      ],
-    ],
-    [
-      1992,
-      [
-        "Digital Strategy Executive at Dun & Bradstreet (1992–1996).",
-        "Worked on board-level digital projects.",
-      ],
-    ],
-    [
-      1996,
-      [
-        "Head of Content Innovation at NTL Interactive (1996–1998).",
-        "Helped launch Europe’s first commercial interactive TV service and led a team of 30 creatives and technologists.",
-      ],
-    ],
-    [
-      1998,
-      [
-        "Head of Interactive at MTV UK, Northern & Eastern Europe (1998–2003).",
-        "Led mobile, web and BAFTA-winning 360° projects.",
-      ],
-    ],
-    [1999, ["Met Emily."]],
-    [2001, []],
-    [2002, []],
-    [
-      2003,
-      [
-        "Creative Director at Twelve Ten (2003–2004).",
-        "Led new business and strategy.",
-        "Archie was born.",
-      ],
-    ],
-    [
-      2004,
-      [
-        "Founder and CEO of Mudlark Digital / Pixel-Lab (2004–2011).",
-        "Led projects including Such Tweet Sorrow and Chromaroma.",
-      ],
-    ],
-    [
-      2005,
-      [
-        "Co-founded and directed the original London Games Festival (2005–2009).",
-        "Produced games, art, performance and skills events.",
-        "Robin was born.",
-      ],
-    ],
-    [2006, ["Got married."]],
-    [2007, ["Fraser was born."]],
-    [
-      2009,
-      [
-        "Founder and CEO of Chromaroma (2009–2011).",
-        "The Oyster-card social game raised two funding rounds and is now a permanent exhibit at MoMA.",
-      ],
-    ],
-    [
-      2011,
-      [
-        "Product Strategy Director at AKQA London (2011–2016).",
-        "Led AKQA’s global Product and Business Innovation practice.",
-      ],
-    ],
-    [
-      2013,
-      [
-        "Moved from London to Portland as AKQA Product Strategy Director for Nike.",
-        "Strategic Advisor to TrackShift (2013–2019), helping musicians get paid faster.",
-      ],
-    ],
-    [
-      2015,
-      [
-        "“Swiss Army Knife” at A Strangely Isolated Place (2015–present).",
-        "Worked across operations, logistics, licensing and sales.",
-      ],
-    ],
-    [
-      2016,
-      [
-        "Group Director for Nike at AKQA (2016–2018).",
-        "Led AKQA Portland’s customer-experience work, including Nike Membership and the Nike App pilot.",
-      ],
-    ],
-    [
-      2017,
-      [
-        "Mentor and Advisor to Jaguar Land Rover (2017–2018).",
-        "Worked with the first three incubator cohorts.",
-      ],
-    ],
-    [
-      2018,
-      [
-        "Executive Director at AKQA (2018–2019).",
-        "Led AKQA’s Consumer Experience team on work for Nike, Levi’s, Amazon and Beats.",
-      ],
-    ],
-    [
-      2019,
-      [
-        "Senior Director, Consumer Experience at Nike (2019–2021).",
-        "Led digital and physical services, experiences and store concepts.",
-      ],
-    ],
-    [2020, ["Led the Nike Rise retail concept and global launch."]],
-    [
-      2021,
-      [
-        "Head of Design for Amazon Alexa (2021–2022).",
-        "Led Alexa’s end-to-end experience, including Hey Disney!",
-      ],
-    ],
-    [
-      2022,
-      [
-        "Design Principal for Amazon Alexa (2022–2023).",
-        "Set the vision and strategy for Alexa’s move into LLMs.",
-      ],
-    ],
-    [
-      2023,
-      [
-        "Head of Design, Commerce at Cash App (2023–2025).",
-        "Led design across Cash App, Afterpay and Cash for Business.",
-      ],
-    ],
-    [2024, ["Joined the board of Hoyt Arboretum Friends (2024–present)."]],
-    [
-      2025,
-      [
-        "Design Director at Shopify (2025–present).",
-        "Leading product and brand design to help merchants grow their businesses.",
-      ],
-    ],
-  ]
+  assert.deepEqual(Object.keys(eventsByYear).map(Number), [
+    1990, 1992, 1996, 1998, 1999, 2003, 2004, 2005, 2006, 2007, 2009,
+    2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023,
+    2024, 2025,
+  ])
+  assert.equal(
+    Object.values(eventsByYear).reduce((count, events) => {
+      return count + events.length
+    }, 0),
+    46,
+  )
+  assert.deepEqual(eventsByYear[1999], ["Met Emily."])
+  assert.equal(eventsByYear[2003].at(-1), "Archie was born.")
+  assert.equal(eventsByYear[2005].at(-1), "Robin was born.")
+  assert.deepEqual(eventsByYear[2006], ["Got married."])
+  assert.deepEqual(eventsByYear[2007], ["Fraser was born."])
+  assert.match(eventsByYear[1990][0], /Liverpool John Moores University/)
+  assert.match(eventsByYear[2025][0], /Design Director at Shopify/)
 
-  const milestoneYears = [...source.matchAll(/^  (\d{4}): \{$/gm)].map(
+  const metadataYears = [...source.matchAll(/^  (\d{4}): \{$/gm)].map(
     (match) => Number(match[1]),
   )
-  assert.deepEqual(
-    milestoneYears,
-    expectedMilestones.map(([year]) => year),
-  )
-
-  for (const [, events] of expectedMilestones) {
-    for (const event of events) {
-      assert.ok(
-        source.includes(JSON.stringify(event)),
-        `missing confirmed event: ${event}`,
-      )
-    }
-  }
-
-  assert.doesNotMatch(source, /\b(?:daughter|son|sold|sale)\b/i)
+  assert.deepEqual(metadataYears, [
+    1973, 1990, 1992, 1996, 1998, 1999, 2001, 2002, 2003, 2004, 2005,
+    2006, 2007, 2009, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020,
+    2021, 2022, 2023, 2024, 2025,
+  ])
+  assert.doesNotMatch(source, /^\s*events\s*:/m)
+  assert.doesNotMatch(content, /\b(?:daughter|son|sold|sale)\b/i)
 
   const media = [
     ...source.matchAll(/\b(?:src|video|photo):\s*["']([^"']+)["']/g),
@@ -229,11 +100,36 @@ test("Toby's timeline marks each country transition with a flag", () => {
   assert.match(vertical, /markers\.some\(\(marker\) => marker\.country\)/)
 })
 
+test("the mobile timeline can show country and age at the same time", () => {
+  const vertical = read("components/lifeline/lifeline-vertical.tsx")
+  const entryStart = vertical.indexOf("const LifelineVerticalEntry")
+  const componentStart = vertical.indexOf("export function LifelineVertical")
+  const entry = vertical.slice(entryStart, componentStart)
+  const component = vertical.slice(componentStart)
+
+  assert.match(vertical, /const COUNTRY_AND_AGE_GRID_CLASS\s*=/)
+  assert.match(vertical, /const COUNTRY_AND_AGE_RAIL_LEFT\s*=/)
+  assert.match(
+    vertical,
+    /showCountry && showAge\s*\?\s*COUNTRY_AND_AGE_GRID_CLASS/,
+  )
+  assert.match(
+    vertical,
+    /showCountry && showAge\s*\?\s*COUNTRY_AND_AGE_RAIL_LEFT/,
+  )
+  assert.match(entry, /\{showCountry && \([\s\S]*?<LifelineCountryFlag/)
+  assert.match(entry, /\{showAge && \([\s\S]*?\{age\}/)
+  assert.match(component, /\{showCountry && \([\s\S]*?>\s*Country\s*</)
+  assert.match(component, /\{showAge && \([\s\S]*?>\s*Age\s*</)
+})
+
 test("the home page and metadata belong to Toby", () => {
   const page = read("app/page.tsx")
   const layout = read("app/layout.tsx")
+  const source = read("lib/toby.ts")
 
   assert.match(page, /from ["']@\/lib\/toby["']/)
+  assert.match(page, /const tobyLifeline = getTobyLifeline\(\)/)
   assert.match(page, /markers=\{tobyLifeline\.markers\}/)
   assert.match(page, /birthYear=\{tobyLifeline\.birthYear\}/)
   assert.match(page, /TOBY_LINKEDIN_URL/)
@@ -246,6 +142,9 @@ test("the home page and metadata belong to Toby", () => {
   )
   assert.match(layout, /title:\s*["']Toby Barnes \| Lifeline["']/)
   assert.match(layout, /A year-by-year record of Toby Barnes's work and life\./)
+  assert.match(source, /export function getTobyLifeline\(\)/)
+  assert.match(source, /readFileSync\(/)
+  assert.match(source, /mergeLifelineMarkdownEvents\(/)
 })
 
 test("Toby's timeline hides ages and uses smaller years without changing the demos", () => {
