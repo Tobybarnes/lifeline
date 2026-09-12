@@ -1,0 +1,7 @@
+# Every change to the agent-facing memory needs Toby's review before it merges.
+# Pair this with a branch protection rule on main: require a pull request,
+# require review from Code Owners, and disallow direct pushes.
+
+/content/memory/   @Tobybarnes
+/content/memory.md @Tobybarnes
+/lib/memory.ts     @Tobybarnes
