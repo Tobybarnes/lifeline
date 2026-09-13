@@ -9,12 +9,8 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://tobybarnes.me"),
-  title: {
-    default: "Toby Barnes",
-    template: "%s",
-  },
-  description: "Design leader. Interactive products, and the teams that make them.",
+  title: "Toby Barnes | Lifeline",
+  description: "A year-by-year record of Toby Barnes's work and life.",
 };
 
 export default function RootLayout({

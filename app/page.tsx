@@ -1,58 +1,60 @@
-import type { Metadata } from "next"
+import { Lifeline } from "@/components/lifeline"
 import {
-  SiteFrame,
-  SiteIndex,
-  SiteIndexRow,
-  SiteLede,
-  SITE_LINK,
-} from "@/components/site-frame"
-import { CONTACT_EMAIL, SOCIAL_LINKS } from "@/lib/site"
+  LifelineFooter,
+  LifelineNav,
+  LifelineShell,
+  LifelineStage,
+} from "@/components/lifeline-shell"
+import { ThemeSwitcher } from "@/components/theme-switcher"
+import { TobyCompanyIcons } from "@/components/toby-company-icons"
+import { getTobyLifeline, TOBY_LINKEDIN_URL } from "@/lib/toby"
 
-export const metadata: Metadata = {
-  title: "Toby Barnes",
-  description: "Design leader. Interactive products, and the teams that make them.",
-}
+const UPSTREAM_URL = "https://github.com/evilrabbit/lifeline"
+const LINK_CLASS_NAME =
+  "inline-flex min-h-11 items-center text-balance text-sm text-zinc-500 transition-colors duration-300 hover:text-black dark:hover:text-white"
 
 export default function Home() {
-  return (
-    <SiteFrame
-      nav={false}
-      footerRight={
-        <>
-          {SOCIAL_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={SITE_LINK}
-            >
-              {link.label}
-            </a>
-          ))}
-          <a href={`mailto:${CONTACT_EMAIL}`} className={SITE_LINK}>
-            {CONTACT_EMAIL}
-          </a>
-        </>
-      }
-    >
-      {/* One sentence a stranger should leave with. Yours to sharpen. */}
-      <SiteLede title="Toby Barnes">
-        Design leader. Interactive products, and the teams that make them.
-      </SiteLede>
+  const tobyLifeline = getTobyLifeline()
 
-      <SiteIndex>
-        <SiteIndexRow
-          label="Timeline"
-          description="The long version, in order."
-          href="/timeline"
+  return (
+    <LifelineShell>
+      <TobyCompanyIcons />
+      <LifelineNav
+        logo={<span className="text-balance text-sm font-medium">Toby Barnes</span>}
+        logoLabel="Toby Barnes"
+      >
+        <a
+          href={TOBY_LINKEDIN_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={LINK_CLASS_NAME}
+        >
+          LinkedIn
+        </a>
+      </LifelineNav>
+
+      <LifelineStage>
+        <Lifeline
+          markers={tobyLifeline.markers}
+          birthYear={tobyLifeline.birthYear}
+          title={tobyLifeline.name}
+          className="h-full"
+          showAge={false}
+          yearClassName="text-[12px]"
         />
-        <SiteIndexRow
-          label="Work"
-          description="A few things worth stopping on."
-          href="/work"
-        />
-      </SiteIndex>
-    </SiteFrame>
+      </LifelineStage>
+
+      <LifelineFooter>
+        <ThemeSwitcher />
+        <a
+          href={UPSTREAM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={LINK_CLASS_NAME}
+        >
+          Built with Lifeline
+        </a>
+      </LifelineFooter>
+    </LifelineShell>
   )
 }
